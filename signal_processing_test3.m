@@ -75,7 +75,8 @@ function [lowPassFreq, highPassFreq, rectifiedSignal] = phase2(soundClip, nChann
     highPassFreq = [175, 275, 375, 480, 605, 745, 890, 1060, 1235, 1455, 1695, 1955, 2295, 2655, 3095, 3655];
 
     %5
-    filteredSignal = zeros(422366, nChannels);
+    soundClipLength = length(soundClip)
+    filteredSignal = zeros(soundClipLength, nChannels);
 
     for j = 1:1:nChannels
         filteredSignal(:,j) = filter( leastSquaresBandpass( lowPassFreq(j), highPassFreq(j) ), soundClip);
@@ -97,7 +98,7 @@ function [lowPassFreq, highPassFreq, rectifiedSignal] = phase2(soundClip, nChann
     rectifiedSignal = abs(filteredSignal);   
 
     %8
-    rectifiedEnvelope = zeros(422366, nChannels);
+    rectifiedEnvelope = zeros(soundClipLength, nChannels);
 
     for k = 1:1:nChannels
         rectifiedEnvelope(:,k) = filter(lowpassFilter, rectifiedSignal(:,k));
