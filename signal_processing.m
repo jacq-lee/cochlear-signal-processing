@@ -2,7 +2,7 @@ clear all;
 clear clc;
 close all;
 
-sound1 = 'BME 252 Phase 1 Audio Files\1.mp3';
+sound1 = 'BME 252 Phase 1 Audio Files\4b.mp3';
 exportFileName = 'sound1Export.wav';
 resampledFrequency = 16e3;
 
@@ -76,7 +76,8 @@ function [lowPassFreq, highPassFreq, rectifiedSignal] = phase2(soundClip, nChann
     highPassFreq = [175, 275, 375, 480, 605, 745, 890, 1060, 1235, 1455, 1695, 1955, 2295, 2655, 3095, 3655];
 
     %5
-    filteredSignal = zeros(422366, nChannels);
+    soundClipLength = length(soundClip);
+    filteredSignal = zeros(soundClipLength, nChannels);
 
     for j = 1:1:nChannels
         filteredSignal(:,j) = filter( bandpassFilter( lowPassFreq(j), highPassFreq(j) ), soundClip);
@@ -98,7 +99,7 @@ function [lowPassFreq, highPassFreq, rectifiedSignal] = phase2(soundClip, nChann
     rectifiedSignal = abs(filteredSignal);   
 
     %8
-    rectifiedEnvelope = zeros(422366, nChannels);
+    rectifiedEnvelope = zeros(soundClipLength, nChannels);
 
     for k = 1:1:nChannels
         rectifiedEnvelope(:,k) = filter(lowpassFilter, rectifiedSignal(:,k));
@@ -145,7 +146,7 @@ function phase3(rectifiedSignal, lowCutOff, highCutOff, nChannels)
 
     outputSignal = outputSignal/max(abs(outputSignal));
 
-%     sound(outputSignal);
+    sound(outputSignal);
 
     audiowrite('Output_Signal.wav', outputSignal, 16000);
 

@@ -2,11 +2,11 @@ clear all;
 clear clc;
 close all;
 
-sound1 = '1.mp3';
+sound1 = 'BME 252 Phase 1 Audio Files\1.mp3';
 exportFileName = 'sound1Export.wav';
 resampledFrequency = 16e3;
 
-numChannels = 22;
+numChannels = 20;
 
 [y, Fs] = phase1(sound1, exportFileName, resampledFrequency);
 
@@ -72,11 +72,15 @@ function [lowPassFreq, highPassFreq, rectifiedSignal] = phase2(soundClip, nChann
     clear sound
 
     %4
-     lowPassFreq =  [188, 313, 438, 563, 688, 813, 938, 1063, 1188, 1313, 1563, 1813, 2063, 1313, 2688, 3063, 3563, 4063, 4688, 5313, 6063, 6938];
-    highPassFreq = [313, 438, 563, 688, 813, 938, 1063, 1188, 1313, 1563, 1813, 2063, 1313, 2688, 3036, 3563, 4063, 4688, 5313, 6063, 6938, 7938];
+%     lowPassFreq =  [188, 313, 438, 563, 688, 813, 938, 1063, 1188, 1313, 1563, 1813, 2063, 1313, 2688, 3063, 3563, 4063, 4688, 5313, 6063, 6938];
+%     highPassFreq = [313, 438, 563, 688, 813, 938, 1063, 1188, 1313, 1563, 1813, 2063, 1313, 2688, 3036, 3563, 4063, 4688, 5313, 6063, 6938, 7938];
+
+    lowPassFreq = [125, 225, 325, 420, 530, 655, 790, 940, 1105, 1285, 1505, 1745, 2005, 2345, 2705, 3145, 3705, 4255, 4815, 5385];
+    highPassFreq = [175, 275, 375, 480, 605, 745, 890, 1060, 1235, 1455, 1695, 1955, 2295, 2655, 3095, 3655, 4205, 4765, 5335, 5915];
 
     %5
-    filteredSignal = zeros(422366, nChannels);
+    soundClipLength = length(soundClip);
+    filteredSignal = zeros(soundClipLength, nChannels);
 
     for j = 1:1:nChannels
         filteredSignal(:,j) = filter( bandpassFilter( lowPassFreq(j), highPassFreq(j) ), soundClip);
@@ -98,7 +102,7 @@ function [lowPassFreq, highPassFreq, rectifiedSignal] = phase2(soundClip, nChann
     rectifiedSignal = abs(filteredSignal);   
 
     %8
-    rectifiedEnvelope = zeros(422366, nChannels);
+    rectifiedEnvelope = zeros(soundClipLength, nChannels);
 
     for k = 1:1:nChannels
         rectifiedEnvelope(:,k) = filter(lowpassFilter, rectifiedSignal(:,k));
@@ -147,7 +151,7 @@ function phase3(rectifiedSignal, lowCutOff, highCutOff, nChannels)
 
 %     sound(outputSignal);
 
-    audiowrite('Output_Signal.wav', outputSignal, 16000);
+    audiowrite('Output_Signal_test5.wav', outputSignal, 16000);
 
 end
 
